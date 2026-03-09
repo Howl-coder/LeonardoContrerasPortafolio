@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leonardo Contreras | Data Scientist</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@200;300;400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d1117;--bg2:#080e17;--teal:#00c8e0;--teal-dim:rgba(0,200,224,0.13);--teal-glow:rgba(0,200,224,0.4);--gold:#f5c842;--gold-glow:rgba(245,200,66,0.7);--white:#eaf4fb;--gray:#5a7fa0;--text:#9ec4dc;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;overflow:hidden;cursor:none;height:100%;position:relative;}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--teal);}
+#cur{position:fixed;width:10px;height:10px;background:var(--teal);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen;transition:width .15s,height .15s;left:-100px;top:-100px;}
+#cur-ring{position:fixed;width:32px;height:32px;border:1px solid var(--teal);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.45;transition:width .25s,height .25s;left:-100px;top:-100px;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:600;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 2.8rem;background:rgba(8,14,23,.9);backdrop-filter:blur(14px);border-bottom:1px solid rgba(0,200,224,.18);}
+.nav-logo{font-family:'Share Tech Mono',monospace;font-size:.82rem;color:var(--teal);letter-spacing:4px;}
+.nav-logo em{color:var(--white);font-style:normal;}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--gray);text-decoration:none;letter-spacing:3px;text-transform:uppercase;position:relative;transition:color .3s;}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--teal);transform:scaleX(0);transition:transform .3s;}
+.nav-links a:hover,.nav-links a.active-link{color:var(--teal);}
+.nav-links a:hover::after,.nav-links a.active-link::after{transform:scaleX(1);}
+.nav-right{display:flex;align-items:center;gap:1rem;}
+.nav-clock{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--teal);letter-spacing:2px;}
+.lang-toggle{display:flex;gap:.4rem;}
+.lang-btn{font-family:'Share Tech Mono',monospace;font-size:.6rem;letter-spacing:2px;background:none;border:1px solid var(--gray);color:var(--gray);padding:3px 7px;cursor:none;transition:all .25s;}
+.lang-btn.active{border-color:var(--teal);color:var(--teal);background:var(--teal-dim);}
+
+/* HERO */
+#hero{position:relative;width:100vw;height:100vh;overflow:hidden;background:var(--bg2);}
+.band{position:absolute;inset:0;pointer-events:none;z-index:1;background:linear-gradient(135deg,transparent 18%,rgba(18,72,210,.6) 18%,rgba(28,95,228,.7) 50%,rgba(18,72,210,.6) 82%,transparent 82%);}
+.band::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 31%,rgba(60,140,255,.1) 31%,rgba(60,140,255,.1) 47%,transparent 47%);}
+.diag-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;}
+.ghost{position:absolute;pointer-events:none;z-index:3;font-family:'Exo 2',sans-serif;font-weight:800;color:white;line-height:1;user-select:none;text-transform:uppercase;}
+.hero-year{position:absolute;top:80px;left:4.5vw;z-index:5;pointer-events:none;}
+.hero-year .yr{font-family:'Exo 2',sans-serif;font-weight:800;font-size:clamp(1.2rem,2.5vw,2rem);color:white;opacity:.55;letter-spacing:3px;display:block;}
+.hero-year .mo{font-family:'Share Tech Mono',monospace;font-size:clamp(.65rem,1.1vw,.9rem);color:var(--teal);letter-spacing:5px;opacity:.7;margin-top:.3rem;}
+.hero-name{position:absolute;bottom:10vh;right:3.5vw;z-index:5;pointer-events:none;text-align:right;}
+.hero-name .lbl{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--teal);letter-spacing:6px;text-transform:uppercase;margin-bottom:.5rem;opacity:0;animation:fadeUp .7s .4s forwards;}
+.hero-name h1{font-family:'Exo 2',sans-serif;font-weight:800;font-size:clamp(2.4rem,5.5vw,5rem);line-height:.9;color:var(--white);text-transform:uppercase;opacity:0;animation:fadeUp .7s .6s forwards;}
+.hero-name h1 .hollow{color:transparent;-webkit-text-stroke:1.5px var(--teal);display:block;}
+.hero-name .role{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--teal);letter-spacing:5px;margin-top:.8rem;opacity:0;animation:fadeUp .7s .8s forwards;}
+
+/* DOTS */
+.p3-entry{position:fixed;display:flex;flex-direction:column;align-items:center;z-index:400;cursor:none;transition:left .5s cubic-bezier(.4,0,.2,1),top .5s cubic-bezier(.4,0,.2,1),opacity .4s,transform .4s;}
+.p3-entry[data-dist="0"]{opacity:1;transform:translate(-50%,-50%) scale(1);}
+.p3-entry[data-dist="1"]{opacity:0.5;transform:translate(-50%,-50%) scale(0.85);}
+.p3-entry[data-dist="2"]{opacity:0.22;transform:translate(-50%,-50%) scale(0.72);}
+.p3-entry[data-dist="3"]{opacity:0.08;transform:translate(-50%,-50%) scale(0.6);}
+.p3-entry[data-dist="4"],.p3-entry[data-dist="5"],.p3-entry[data-dist="6"],.p3-entry[data-dist="7"],.p3-entry[data-dist="8"],.p3-entry[data-dist="9"],.p3-entry[data-dist="10"],.p3-entry[data-dist="11"],.p3-entry[data-dist="12"],.p3-entry[data-dist="13"],.p3-entry[data-dist="14"]{opacity:0;transform:translate(-50%,-50%) scale(0.5);pointer-events:none;}
+.p3-dot{width:20px;height:20px;border-radius:50%;background:rgba(200,220,255,.55);border:2px solid rgba(255,255,255,.5);box-shadow:0 0 8px rgba(180,210,255,.3);transition:all .35s;position:relative;}
+.p3-entry[data-dist="0"] .p3-dot{width:30px;height:30px;background:var(--gold);border-color:white;box-shadow:0 0 20px var(--gold-glow),0 0 40px rgba(245,200,66,.3);}
+.p3-entry[data-dist="0"] .p3-dot::before,.p3-entry[data-dist="0"] .p3-dot::after{content:'';position:absolute;border:1.5px solid rgba(245,200,66,.35);border-radius:50%;inset:-10px;animation:ripple 2s ease-out infinite;}
+.p3-entry[data-dist="0"] .p3-dot::after{inset:-20px;border-color:rgba(245,200,66,.15);animation-delay:.5s;}
+@keyframes ripple{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.3)}}
+.p3-lbl{font-family:'Share Tech Mono',monospace;font-size:.56rem;color:rgba(255,255,255,.45);letter-spacing:2px;margin-top:7px;white-space:nowrap;transition:color .3s;}
+.p3-entry[data-dist="0"] .p3-lbl{color:var(--gold);}
+
+/* PANEL */
+.p3-panel{position:absolute;right:3.5vw;top:50%;transform:translateY(-50%);width:min(330px,30vw);background:rgba(5,15,38,.85);border:1px solid rgba(0,200,224,.42);backdrop-filter:blur(12px);padding:1.6rem 1.8rem;z-index:15;clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,0 100%);}
+.p3-panel::before{content:'';position:absolute;top:0;right:0;width:18px;height:18px;border-top:1px solid var(--teal);border-right:1px solid var(--teal);}
+.p3-panel::after{content:'';position:absolute;right:100%;top:50%;transform:translateY(-50%);width:44px;height:1px;background:linear-gradient(90deg,transparent,rgba(0,200,224,.5));}
+.p-tag{font-family:'Share Tech Mono',monospace;font-size:.56rem;color:var(--teal);letter-spacing:4px;text-transform:uppercase;margin-bottom:.4rem;}
+.p-title{font-family:'Exo 2',sans-serif;font-weight:700;font-size:1.05rem;color:var(--white);letter-spacing:1px;margin-bottom:.2rem;line-height:1.2;}
+.p-company{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--teal);letter-spacing:3px;margin-bottom:.8rem;}
+.p-desc{font-size:.8rem;color:var(--text);line-height:1.65;font-weight:300;margin-bottom:.9rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.p-techs{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem;}
+.p-tech{font-family:'Share Tech Mono',monospace;font-size:.54rem;letter-spacing:2px;padding:3px 8px;border:1px solid rgba(0,200,224,.28);color:var(--teal);background:rgba(0,200,224,.05);}
+.p-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.44rem 1.1rem;border:1px solid var(--teal);background:none;color:var(--teal);font-family:'Share Tech Mono',monospace;font-size:.58rem;letter-spacing:3px;text-transform:uppercase;cursor:none;transition:all .3s;position:relative;overflow:hidden;}
+.p-btn::before{content:'';position:absolute;inset:0;background:var(--teal);transform:translateX(-100%);transition:transform .3s;z-index:-1;}
+.p-btn:hover{color:var(--bg);}
+.p-btn:hover::before{transform:translateX(0);}
+
+/* CAL NAV */
+.cal-nav{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:.9rem;z-index:30;}
+.cal-btn{width:33px;height:33px;border:1px solid rgba(0,200,224,.35);background:rgba(8,14,23,.75);color:var(--teal);font-size:.85rem;display:flex;align-items:center;justify-content:center;cursor:none;transition:all .3s;clip-path:polygon(20% 0,80% 0,100% 50%,80% 100%,20% 100%,0 50%);}
+.cal-btn:hover{background:var(--teal-dim);border-color:var(--teal);}
+.cal-indicator{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap;max-width:320px;justify-content:center;}
+.cal-pip{width:18px;height:3px;background:rgba(0,200,224,.2);transition:all .3s;cursor:none;}
+.cal-pip.active{background:var(--teal);width:28px;box-shadow:0 0 7px var(--teal);}
+.scroll-hint{position:absolute;bottom:1.8rem;left:4.5vw;z-index:30;display:flex;flex-direction:column;align-items:center;gap:.4rem;opacity:0;animation:fadeUp .6s 1.6s forwards;}
+.scroll-hint span{font-family:'Share Tech Mono',monospace;font-size:.52rem;color:var(--gray);letter-spacing:4px;text-transform:uppercase;}
+.s-bar{width:1px;height:34px;background:linear-gradient(var(--teal),transparent);animation:sA 2s infinite;}
+@keyframes sA{0%{opacity:1;transform:scaleY(1);transform-origin:top}100%{opacity:0;transform:scaleY(0);transform-origin:top}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* P3 STATUS SCREEN */
+#about{position:relative;width:100vw;height:100vh;overflow:hidden;background:#060e2a;}
+.st-band{position:absolute;inset:0;pointer-events:none;z-index:0;background:linear-gradient(135deg,transparent 18%,rgba(18,72,210,.55) 18%,rgba(28,95,228,.65) 50%,rgba(18,72,210,.55) 82%,transparent 82%);}
+.st-namebar{position:absolute;top:58px;left:0;right:0;z-index:10;background:rgba(4,10,42,.95);border-bottom:2px solid var(--teal);padding:.55rem 2.5rem;display:flex;align-items:center;gap:2.5rem;}
+.st-name{font-family:'Exo 2',sans-serif;font-weight:800;font-size:1.3rem;color:var(--white);letter-spacing:4px;text-transform:uppercase;}
+.st-field{display:flex;flex-direction:column;gap:.05rem;}
+.st-field-lbl{font-family:'Share Tech Mono',monospace;font-size:.48rem;color:var(--gray);letter-spacing:3px;text-transform:uppercase;}
+.st-field-val{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--teal);letter-spacing:2px;font-style:italic;}
+.st-field-val.big{font-family:'Exo 2',sans-serif;font-weight:800;font-size:1.2rem;color:var(--white);font-style:normal;}
+.st-exp{margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:.52rem;color:var(--gray);letter-spacing:2px;}
+.st-exp em{color:var(--teal);font-style:normal;font-size:.68rem;}
+.st-body{position:absolute;inset:0;padding-top:calc(58px + 2.9rem);display:grid;grid-template-columns:1fr 220px;grid-template-rows:1fr auto;gap:1rem;padding-left:1.5rem;padding-right:1.5rem;padding-bottom:1.5rem;z-index:5;}
+.st-info{background:none;border:none;padding:1.4rem 1.8rem;display:flex;flex-direction:column;gap:.9rem;position:relative;}
+.st-info::after{display:none;}
+.st-role{font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--teal);letter-spacing:5px;text-transform:uppercase;}
+.st-desc{font-size:.9rem;color:var(--text);line-height:1.85;font-weight:300;}
+.st-sep{width:100%;height:1px;background:linear-gradient(90deg,rgba(0,200,224,.4),transparent);}
+.st-bars{display:flex;flex-direction:column;gap:.55rem;}
+.st-bar-row{display:grid;grid-template-columns:3rem 6rem 1fr;align-items:center;gap:.8rem;}
+.st-bar-lbl{font-family:'Exo 2',sans-serif;font-weight:700;font-size:.8rem;color:var(--teal);letter-spacing:2px;}
+.st-bar-num{font-family:'Exo 2',sans-serif;font-weight:800;font-size:1rem;color:var(--white);}
+.st-bar-track{height:9px;background:rgba(0,40,80,.6);border:1px solid rgba(0,200,224,.2);overflow:hidden;}
+.st-bar-fill{height:100%;background:linear-gradient(90deg,var(--teal),rgba(0,200,224,.4));box-shadow:0 0 6px var(--teal-glow);}
+.st-badge{background:none;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.8rem;}
+.st-badge-lbl{font-family:'Share Tech Mono',monospace;font-size:.48rem;color:var(--teal);letter-spacing:4px;text-transform:uppercase;text-align:center;}
+.profile-frame{position:relative;width:140px;height:140px;}
+.profile-ring{position:absolute;inset:-16px;border:1px solid rgba(0,200,224,.3);border-radius:50%;animation:spin 20s linear infinite;}
+.profile-ring::before{content:'';position:absolute;width:8px;height:8px;background:var(--teal);border-radius:50%;top:-4px;left:50%;transform:translateX(-50%);box-shadow:0 0 12px var(--teal);}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.profile-inner{width:100%;height:100%;border:1px solid rgba(0,200,224,.4);background:linear-gradient(135deg,#061428,#0a1f35);display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);overflow:hidden;position:relative;}
+.profile-scan{position:absolute;inset:0;background:linear-gradient(transparent 0%,rgba(0,200,224,.05) 50%,transparent 100%);background-size:100% 20px;animation:scan 3s linear infinite;}
+@keyframes scan{from{background-position:0 -100px}to{background-position:0 400px}}
+.profile-initials{font-family:'Exo 2',sans-serif;font-weight:800;font-size:2.8rem;color:var(--teal);text-shadow:0 0 28px var(--teal-glow);letter-spacing:-2px;position:relative;z-index:1;}
+.st-skills{grid-column:1/-1;background:rgba(2,6,30,.88);border:1px solid rgba(0,200,224,.3);padding:.9rem 1.5rem;position:relative;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));}
+.st-skills::before{content:'';position:absolute;top:0;right:0;width:14px;height:14px;border-top:1px solid var(--teal);border-right:1px solid var(--teal);}
+.st-skills::after{content:'';position:absolute;bottom:0;left:0;width:14px;height:14px;border-bottom:1px solid var(--teal);border-left:1px solid var(--teal);}
+.st-skills-lbl{font-family:'Share Tech Mono',monospace;font-size:.52rem;color:var(--gold);letter-spacing:5px;text-transform:uppercase;font-style:italic;margin-bottom:.6rem;}
+.st-skills-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:.18rem .5rem;}
+.st-sk{display:flex;align-items:center;gap:.45rem;padding:.22rem 0;border-bottom:1px solid rgba(0,200,224,.07);}
+.st-sk-icon{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.st-sk-name{font-family:'Share Tech Mono',monospace;font-size:.56rem;color:var(--white);letter-spacing:1px;}
+.st-sk-type{font-family:'Share Tech Mono',monospace;font-size:.46rem;color:var(--gray);letter-spacing:1px;margin-left:auto;}
+.st-next{font-family:'Share Tech Mono',monospace;font-size:.5rem;color:var(--gold);letter-spacing:3px;font-style:italic;margin-top:.55rem;}
+.st-next em{font-style:normal;color:var(--white);}
+
+/* COMMON */
+.container{max-width:1080px;margin:0 auto;padding:0 3rem;}
+.sec-head{display:flex;align-items:center;gap:1.5rem;margin-bottom:3.5rem;}
+.sec-num{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--teal);letter-spacing:3px;}
+.sec-title{font-family:'Exo 2',sans-serif;font-weight:800;font-size:clamp(1.7rem,3.5vw,2.7rem);text-transform:uppercase;color:var(--white);letter-spacing:2px;}
+.sec-title .hollow{color:transparent;-webkit-text-stroke:1px var(--teal);}
+.sec-line{flex:1;height:1px;background:linear-gradient(90deg,var(--teal-glow),transparent);}
+
+/* SKILLS (hidden — merged into about) */
+#skills{display:none;}
+
+/* CONTACT */
+#contact{position:relative;z-index:2;padding:7rem 0;background:var(--bg2);text-align:center;}
+.contact-inner{max-width:580px;margin:0 auto;}
+.c-label{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--teal);letter-spacing:6px;text-transform:uppercase;margin-bottom:.8rem;}
+.c-big{font-family:'Exo 2',sans-serif;font-weight:800;font-size:clamp(2rem,5vw,3.2rem);text-transform:uppercase;color:var(--white);letter-spacing:2px;margin-bottom:.8rem;}
+.c-sub{font-size:.9rem;color:var(--gray);font-weight:300;letter-spacing:1px;margin-bottom:2.5rem;line-height:1.8;}
+.c-links{display:flex;justify-content:center;flex-wrap:wrap;gap:1rem;}
+.c-link{display:flex;align-items:center;gap:.7rem;padding:.85rem 1.5rem;border:1px solid rgba(0,200,224,.26);color:var(--text);text-decoration:none;font-family:'Share Tech Mono',monospace;font-size:.6rem;letter-spacing:2px;transition:all .3s;background:rgba(0,200,224,.02);}
+.c-link:hover{border-color:var(--teal);color:var(--teal);background:var(--teal-dim);transform:translateY(-3px);}
+.c-link svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.5;flex-shrink:0;}
+footer{position:relative;z-index:2;border-top:1px solid rgba(0,200,224,.1);padding:1.3rem 3rem;display:flex;justify-content:space-between;align-items:center;background:var(--bg);}
+footer p{font-family:'Share Tech Mono',monospace;font-size:.56rem;color:var(--gray);letter-spacing:2px;text-transform:uppercase;}
+
+/* MODAL */
+.m-overlay{position:fixed;inset:0;background:rgba(0,5,15,.9);backdrop-filter:blur(8px);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .35s;}
+.m-overlay.open{opacity:1;pointer-events:all;}
+.m-box{width:90%;max-width:650px;max-height:86vh;overflow-y:auto;background:linear-gradient(135deg,#050f20,#061428);border:1px solid rgba(0,200,224,.4);padding:2.5rem;position:relative;clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,22px 100%,0 calc(100% - 22px));transform:scale(.95) translateY(18px);transition:transform .35s;}
+.m-overlay.open .m-box{transform:scale(1) translateY(0);}
+.m-box::before{content:'';position:absolute;top:0;right:0;width:22px;height:22px;border-top:1px solid var(--teal);border-right:1px solid var(--teal);}
+.m-box::after{content:'';position:absolute;bottom:0;left:0;width:22px;height:22px;border-bottom:1px solid var(--teal);border-left:1px solid var(--teal);}
+.m-close{position:absolute;top:1rem;right:1rem;background:none;border:1px solid rgba(0,200,224,.28);color:var(--gray);width:26px;height:26px;font-size:.72rem;cursor:none;transition:all .3s;display:flex;align-items:center;justify-content:center;}
+.m-close:hover{border-color:var(--teal);color:var(--teal);}
+.m-tag{font-family:'Share Tech Mono',monospace;font-size:.56rem;color:var(--teal);letter-spacing:5px;text-transform:uppercase;margin-bottom:.4rem;}
+.m-title{font-family:'Exo 2',sans-serif;font-weight:800;font-size:1.5rem;color:var(--white);letter-spacing:1px;margin-bottom:.25rem;}
+.m-company{font-family:'Share Tech Mono',monospace;font-size:.63rem;color:var(--teal);letter-spacing:3px;margin-bottom:1.3rem;}
+.m-div{width:100%;height:1px;background:linear-gradient(90deg,var(--teal-glow),transparent);margin-bottom:1.3rem;}
+.m-points{list-style:none;display:flex;flex-direction:column;gap:.65rem;margin-bottom:1.3rem;}
+.m-points li{font-size:.86rem;color:var(--text);padding-left:1.2rem;position:relative;line-height:1.65;font-weight:300;}
+.m-points li::before{content:'▸';position:absolute;left:0;color:var(--teal);font-size:.63rem;top:.15rem;}
+.m-techs{display:flex;flex-wrap:wrap;gap:.45rem;padding-top:1.2rem;border-top:1px solid rgba(0,200,224,.12);}
+
+/* SIDE PANELS — slide in from right over hero */
+.side-panel{position:fixed;inset:0;z-index:550;pointer-events:none;opacity:0;transition:opacity .35s;overflow:hidden;background:#060e2a;}
+.side-panel.open{opacity:1;pointer-events:all;}
+body.panel-open .p3-entry{opacity:0!important;pointer-events:none;}
+.side-close{position:absolute;top:72px;right:1.5rem;z-index:20;background:none;border:1px solid rgba(0,200,224,.35);color:var(--gray);width:30px;height:30px;font-size:.75rem;cursor:none;transition:all .3s;display:flex;align-items:center;justify-content:center;}
+.side-close:hover{border-color:var(--teal);color:var(--teal);}
+.c-link{display:flex;align-items:center;gap:.9rem;padding:.9rem 1.5rem;border:1px solid rgba(0,200,224,.26);color:var(--text);text-decoration:none;font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:2px;transition:all .3s;background:rgba(0,200,224,.02);}
+.c-link:hover{border-color:var(--teal);color:var(--teal);background:var(--teal-dim);}
+
+/* CAROUSEL DOTS — track slides, active always at anchor */
+.p3-entry{position:fixed!important;display:flex;flex-direction:column;align-items:center;z-index:500!important;cursor:none;transition:left .5s cubic-bezier(.4,0,.2,1),top .5s cubic-bezier(.4,0,.2,1),opacity .4s,transform .4s;pointer-events:auto;}
+
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="cur-ring"></div>
+<div id="dotsLayer" style="position:fixed;inset:0;z-index:500;pointer-events:none;"></div>
+<nav>
+  <div class="nav-logo">LC<em>_2302</em></div>
+  <ul class="nav-links">
+    <li><a href="#" onclick="showPanel(null)" data-en="Timeline" data-es="Cronología" class="active-link">Timeline</a></li>
+    <li><a href="#" onclick="showPanel('about')" data-en="About" data-es="Sobre Mí">About</a></li>
+    <li><a href="#" onclick="showPanel('contact')" data-en="Summon Me" data-es="Invócame">Summon Me</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('es')">ES</button>
+      <button class="lang-btn" id="musicBtn" onclick="toggleMusic()">♪</button>
+    </div>
+    <div class="nav-clock" id="clock">00:00:00</div>
+  </div>
+</nav>
+
+<audio id="bgMusic" loop src="https://raw.githubusercontent.com/Howl-coder/LeonardoContrerasPortafolio/main/aria_of_the_soul.mp3"></audio>
+
+<section id="hero">
+  <div class="band"></div>
+  <svg class="diag-svg" viewBox="0 0 1440 900" preserveAspectRatio="none">
+    <line x1="-60" y1="980" x2="1500" y2="-80" stroke="white" stroke-width="1.2" opacity=".52"/>
+  </svg>
+  <div class="ghost" style="font-size:clamp(5rem,11vw,10rem);top:5vh;right:2.5vw;opacity:.05;">6</div>
+  <div class="ghost" style="font-size:clamp(3rem,6.5vw,6rem);top:18vh;right:10vw;opacity:.038;">5 <span style="font-size:.35em;letter-spacing:3px;">WED</span></div>
+  <div class="ghost" style="font-size:clamp(2rem,4.5vw,4.2rem);top:31vh;right:17.5vw;opacity:.03;">4 <span style="font-size:.35em;letter-spacing:3px;">TUE</span></div>
+  <div class="hero-year"><span class="yr" id="heroYr">2024</span><span class="mo" id="heroMo">FEB</span></div>
+  <div class="hero-name">
+    <div class="lbl" data-en="// DATA SCIENTIST //" data-es="// CIENTÍFICO DE DATOS //">// DATA SCIENTIST //</div>
+    <h1>LEONARDO<span class="hollow">CONTRERAS</span></h1>
+    <div class="role" data-en="AI · ML · DATA ENGINEERING" data-es="IA · ML · INGENIERÍA DE DATOS">AI · ML · DATA ENGINEERING</div>
+  </div>
+  <div class="p3-panel" id="panel">
+    <div class="p-tag" id="pTag">—</div>
+    <div class="p-title" id="pTitle">—</div>
+    <div class="p-company" id="pCompany">—</div>
+    <p class="p-desc" id="pDesc">—</p>
+    <div class="p-techs" id="pTechs"></div>
+    <button class="p-btn" onclick="openModal()">▸ <span data-en="FULL DETAILS" data-es="VER TODO">FULL DETAILS</span></button>
+  </div>
+  <div class="cal-nav">
+    <button class="cal-btn" onclick="navigate(-1)">◂</button>
+    <div class="cal-indicator" id="pips"></div>
+    <button class="cal-btn" onclick="navigate(1)">▸</button>
+  </div>
+  <div class="scroll-hint">
+    <span data-en="SCROLL" data-es="BAJAR">SCROLL</span>
+    <div class="s-bar"></div>
+  </div>
+</section>
+
+<!-- ABOUT OVERLAY -->
+<div class="side-panel" id="panelAbout">
+  <button class="side-close" onclick="showPanel(null)">✕</button>
+  <div class="st-band"></div>
+  <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;" viewBox="0 0 1440 900" preserveAspectRatio="none">
+    <line x1="-60" y1="980" x2="1500" y2="-80" stroke="white" stroke-width="1.2" opacity=".4"/>
+  </svg>
+  <div class="st-namebar">
+    <div class="st-name">Leonardo Contreras</div>
+    <div class="st-field"><div class="st-field-lbl">ARCANA</div><div class="st-field-val">The Emperor</div></div>
+    <div class="st-field"><div class="st-field-lbl">LV</div><div class="st-field-val big">24</div></div>
+    <div class="st-field"><div class="st-field-lbl">TITLE</div><div class="st-field-val">Data Scientist</div></div>
+    <div class="st-exp" data-en="NEXT EXP &nbsp;<em>822</em>" data-es="SIG. EXP &nbsp;<em>822</em>">NEXT EXP &nbsp;<em>822</em></div>
+  </div>
+  <div class="st-body">
+    <div class="st-info">
+      <div class="st-role" data-en="// CS · DATA SCIENCE · APPLIED AI //" data-es="// CS · CIENCIA DE DATOS · IA APLICADA //">// CS · DATA SCIENCE · APPLIED AI //</div>
+      <p class="st-desc" data-en="Computer Science student at Tecnológico de Monterrey (GPA 91.72/100), pursuing a Data Science certification and a Master\'s in Applied AI (Sep 2025). I design and ship end-to-end ML systems — from hierarchical linear models that drive SKU-level revenue strategy at a national CPG company, to fine-tuned bilingual LLMs built with LoRA and PEFT for real-world legal impact. I've saved 1M+ USD in production optimization at Ternium, led full BI migrations, and won a blockchain hackathon applying SHAP-explained classifiers. I thrive at the intersection of rigorous statistical modeling, scalable engineering, and measurable business outcomes — the kind of problems FAANG and top-tier tech teams live in." data-es="Estudiante de CS en Tec de Monterrey (91.72/100), cursando Maestría en IA Aplicada. Diseño y despliego sistemas ML de extremo a extremo: modelos jerárquicos para estrategia de ingresos por SKU, LLMs bilingües con LoRA/PEFT, y clasificadores con SHAP. Ahorré +1M USD en Ternium, lideré migraciones BI completas y gané un hackathon blockchain. Me especializo en modelado estadístico riguroso, ingeniería escalable e impacto de negocio medible.">Computer Science student at Tecnológico de Monterrey (GPA 91.72/100), pursuing a Data Science certification and a Master\'s in Applied AI (Sep 2025). I design and ship end-to-end ML systems — from hierarchical linear models that drive SKU-level revenue strategy at a national CPG company, to fine-tuned bilingual LLMs built with LoRA and PEFT for real-world legal impact. I've saved 1M+ USD in production optimization at Ternium, led full BI migrations, and won a blockchain hackathon applying SHAP-explained classifiers. I thrive at the intersection of rigorous statistical modeling, scalable engineering, and measurable business outcomes.</p>
+      <div class="st-sep"></div>
+      <div class="st-bars">
+        <div class="st-bar-row"><div class="st-bar-lbl">GPA</div><div class="st-bar-num">91.72</div><div class="st-bar-track"><div class="st-bar-fill" style="width:92%"></div></div></div>
+        <div class="st-bar-row"><div class="st-bar-lbl">Exp</div><div class="st-bar-num">3+ yr</div><div class="st-bar-track"><div class="st-bar-fill" style="width:50%"></div></div></div>
+        <div class="st-bar-row"><div class="st-bar-lbl">ML</div><div class="st-bar-num" title="10+ ML models built and deployed">10+ <span style="font-size:.55rem;color:var(--teal);letter-spacing:1px;font-family:'Share Tech Mono',monospace;">models</span></div><div class="st-bar-track"><div class="st-bar-fill" style="width:78%"></div></div></div>
+        <div class="st-bar-row"><div class="st-bar-lbl">Hack</div><div class="st-bar-num">1st</div><div class="st-bar-track"><div class="st-bar-fill" style="width:100%"></div></div></div>
+      </div>
+    </div>
+    <div class="st-badge">
+      <div class="profile-frame">
+        <div class="profile-ring"></div>
+        <div class="profile-inner"><div class="profile-scan"></div><div class="profile-initials">LC</div></div>
+      </div>
+      <div class="st-badge-lbl">LEONARDO CONTRERAS</div>
+    </div>
+    <div class="st-skills">
+      <div class="st-skills-lbl" data-en="TECH SKILLS" data-es="HABILIDADES">TECH SKILLS</div>
+      <div class="st-skills-grid">
+        <div class="st-sk"><div class="st-sk-icon" style="background:#00c8e0;box-shadow:0 0 5px #00c8e0"></div><div class="st-sk-name">Python</div><div class="st-sk-type">Lang</div></div>
+        <div class="st-sk"><div class="st-sk-icon" style="background:#00c8e0;box-shadow:0 0 5px #00c8e0"></div><div class="st-sk-name">SQL/BigQuery</div><div class="st-sk-type">Lang</div></div>
+        <div class="st-sk"><div class="st-sk-icon" style="background:#00c8e0;box-shadow:0 0 5px #00c8e0"></div><div class="st-sk-name">R Studio</div><div class="st-sk-type">Lang</div></div>
+        <div class="st-sk"><div class="st-sk-icon" style="background:#4ade80;box-shadow:0 0 5px #4ade80"></div><div class="st-sk-name">Scikit-learn</div><div class="st-sk-type">ML</div></div>
+        <div class="st-sk"><div class="st-sk-icon" style="background:#4ade80;box-shadow:0 0 5px #4ade80"></div><div class="st-sk-name">TensorFlow</div><div class="st-sk-type">ML</div></div>
+        <div class="st-sk"><div class="st-sk-icon" style="background:#4ade80;box-shadow:0 0 5px #4ade80"></div><div class="st-sk-name">PyTorch</div><div class="st-sk-type">ML</div></div>
+        <div class="st-sk"><div class="st-sk-icon" style="background:#4ade80;box-shadow:0 0 5px #4ade80"></div><div class="st-sk-name">LLM / NLP</div><div class="st-sk-type">ML</div></div>
+        <div class="st-sk"><div class="st-sk-icon" style="background:#4ade80;box-shadow:0 0 5px #4ade80"></div><div class="st-sk-name">HuggingFace</div><div class="st-sk-type">ML</div></div>
+        <div class="st-sk"><div class="st-sk-icon" style="background:#4ade80;box-shadow:0 0 5px #4ade80"></div><div class="st-sk-name">LoRA / PEFT</div><div class="st-sk-type">ML</div></div>
+        <div class="st-sk"><div class="st-sk-icon" style="background:#f5c842;box-shadow:0 0 5px #f5c842"></div><div class="st-sk-name">Power BI</div><div class="st-sk-type">Viz</div></div>
+        <div class="st-sk"><div class="st-sk-icon" style="background:#f5c842;box-shadow:0 0 5px #f5c842"></div><div class="st-sk-name">Pandas/NumPy</div><div class="st-sk-type">Viz</div></div>
+        <div class="st-sk"><div class="st-sk-icon" style="background:#f5c842;box-shadow:0 0 5px #f5c842"></div><div class="st-sk-name">Looker Studio</div><div class="st-sk-type">Viz</div></div>
+        <div class="st-sk"><div class="st-sk-icon" style="background:#fb923c;box-shadow:0 0 5px #fb923c"></div><div class="st-sk-name">Docker / Git</div><div class="st-sk-type">Tools</div></div>
+        <div class="st-sk"><div class="st-sk-icon" style="background:#fb923c;box-shadow:0 0 5px #fb923c"></div><div class="st-sk-name">Streamlit</div><div class="st-sk-type">Tools</div></div>
+        <div class="st-sk"><div class="st-sk-icon" style="background:#fb923c;box-shadow:0 0 5px #fb923c"></div><div class="st-sk-name">Linux</div><div class="st-sk-type">Tools</div></div>
+        <div class="st-sk"><div class="st-sk-icon" style="background:#c084fc;box-shadow:0 0 5px #c084fc"></div><div class="st-sk-name">Swift/Firebase</div><div class="st-sk-type">Web</div></div>
+        <div class="st-sk"><div class="st-sk-icon" style="background:#c084fc;box-shadow:0 0 5px #c084fc"></div><div class="st-sk-name">JavaScript</div><div class="st-sk-type">Web</div></div>
+        <div class="st-sk"><div class="st-sk-icon" style="background:#c084fc;box-shadow:0 0 5px #c084fc"></div><div class="st-sk-name">Blockchain</div><div class="st-sk-type">Web</div></div>
+      </div>
+      <div class="st-next" data-en="NEXT SKILL &nbsp; LV 25 &nbsp; <em>▸ Master's Degree in Applied AI</em>" data-es="SIG. HABILIDAD &nbsp; LV 25 &nbsp; <em>▸ Maestría en IA Aplicada</em>">NEXT SKILL &nbsp; LV 25 &nbsp; <em>▸ Master's Degree in Applied AI</em></div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT OVERLAY -->
+<div class="side-panel" id="panelContact">
+  <button class="side-close" onclick="showPanel(null)">✕</button>
+  <div class="side-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:2rem;padding:4rem 3rem;">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--teal);letter-spacing:6px;text-transform:uppercase;" data-en="// SUMMON ME //" data-es="// INVÓCAME //">// SUMMON ME //</div>
+    <div style="font-family:'Exo 2',sans-serif;font-weight:800;font-size:clamp(2rem,5vw,3.2rem);text-transform:uppercase;color:var(--white);letter-spacing:2px;" data-en="SUMMON ME" data-es="INVÓCAME">SUMMON ME</div>
+    <p style="font-size:.9rem;color:var(--gray);font-weight:300;letter-spacing:1px;line-height:1.8;text-align:center;max-width:420px;" data-en="Open to opportunities, collaborations, and research projects." data-es="Abierto a oportunidades, colaboraciones y proyectos de investigación.">Open to opportunities, collaborations, and research projects.</p>
+    <div style="display:flex;flex-direction:column;gap:.9rem;width:100%;max-width:420px;">
+      <a href="/cdn-cgi/l/email-protection#721e171d11024041424032151f131b1e5c111d1f" class="c-link"><svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.5;flex-shrink:0"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg><span class="__cf_email__" data-cfemail="dab6bfb5b9aae8e9eae89abdb7bbb3b6f4b9b5b7">[email&#160;protected]</span></a>
+      <a href="https://www.linkedin.com/in/leocp2302" target="_blank" class="c-link"><svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.5;flex-shrink:0"><rect x="2" y="2" width="20" height="20" rx="4"/><path d="M7 10v7M7 7v.01M11 17v-3.5a2.5 2.5 0 015 0V17M11 10v7"/></svg>linkedin · leocp2302</a>
+      <a href="https://github.com/Howl-coder" target="_blank" class="c-link"><svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.5;flex-shrink:0"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>github · Howl-coder</a>
+    </div>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:.5rem;color:var(--gray);letter-spacing:3px;margin-top:1rem;" data-en="© 2026 Leonardo Contreras · Persona 3 Reload inspired" data-es="© 2026 Leonardo Contreras · Inspirado en Persona 3 Reload">© 2026 Leonardo Contreras · Persona 3 Reload inspired</div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="m-overlay" id="mOverlay" onclick="closeOut(event)">
+  <div class="m-box">
+    <button class="m-close" onclick="closeModal()">✕</button>
+    <div class="m-tag"     id="mTag">—</div>
+    <div class="m-title"   id="mTitle">—</div>
+    <div class="m-company" id="mCompany">—</div>
+    <div class="m-div"></div>
+    <ul  class="m-points"  id="mPoints"></ul>
+    <div class="m-techs"   id="mTechs"></div>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// CURSOR
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function a(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='18px';cur.style.height='18px';ring.style.width='46px';ring.style.height='46px';});
+  el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px';ring.style.width='32px';ring.style.height='32px';});
+});
+
+// MUSIC
+function toggleMusic(){
+  const audio=document.getElementById('bgMusic');
+  const btn=document.getElementById('musicBtn');
+  if(audio.paused){
+    audio.play();
+    btn.classList.add('active');
+    btn.textContent='♪ ON';
+  } else {
+    audio.pause();
+    btn.classList.remove('active');
+    btn.textContent='♪';
+  }
+}
+
+// CLOCK
+function tickClock(){const n=new Date();document.getElementById('clock').textContent=`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`;}
+tickClock();setInterval(tickClock,1000);
+
+// LANGUAGE
+let lang='en';
+function setLang(l){
+  lang=l;
+  const btns=document.querySelectorAll('.lang-btn');
+  btns.forEach(b=>b.classList.remove('active'));
+  btns[l==='en'?0:1].classList.add('active');
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    const v=el.getAttribute('data-'+l);if(!v)return;
+    el.innerHTML=v;
+  });
+  buildCal();
+}
+
+// ENTRIES
+let activeIdx=6;
+const ENTRIES=[
+  {tag:{en:'EDUCATION',es:'EDUCACIÓN'},title:{en:'B.Sc. Computer Science',es:'Ing. Ciencias Computacionales'},company:'TECNOLÓGICO DE MONTERREY',date:{en:'Aug 2020',es:'Ago 2020'},
+   short:{en:'GPA 91.52/100. Active FETEC student council member — organized hackathons, led sponsorships, streamed three official events.',es:'Promedio 91.52/100. Miembro activo del consejo estudiantil FETEC.'},
+   points:{en:['GPA 91.52/100. Minor in Data Science. Master\'s in Applied AI starting Sep 2025.','Active FETEC student council member.','Organized an online hackathon, overseeing all stages.','Designed and developed the official hackathon website.','Negotiated with strategic sponsors.','Official streamer for three events.'],
+           es:['Promedio 91.52/100. Certificación en Ciencia de Datos. Maestría en IA Aplicada desde sep 2025.','Miembro activo del consejo estudiantil FETEC.','Organizó hackathon en línea.','Diseñó y desarrolló el sitio web oficial del hackathon.','Negoció con patrocinadores estratégicos.','Streamer oficial en tres eventos.']},
+   techs:['Python','Data Science','Leadership','Event Management']},
+  {tag:{en:'PERSONAL PROJECT',es:'PROYECTO PERSONAL'},title:{en:'Diet & Weight Prediction',es:'Predicción de Peso'},company:'SELF-INITIATED',date:{en:'Aug 2020',es:'Ago 2020'},
+   short:{en:'Predicted weight gain/loss over a semester by tracking daily diet data and applying regression models.',es:'Predije ganancia/pérdida de peso en un semestre con regresión lineal y polinomial.'},
+   points:{en:['Collected personal daily diet data into a custom CSV.','Full data processing with Pandas.','Applied linear and polynomial regression.','Used Seaborn and Matplotlib for visualization.'],
+           es:['Recolecté datos diarios de dieta en CSV personalizado.','Procesé datos completos con Pandas.','Apliqué regresión lineal y polinomial.','Usé Seaborn y Matplotlib para visualización.']},
+   techs:['Python','Pandas','Linear Regression','Polynomial Regression','Seaborn','Matplotlib']},
+  {tag:{en:'INTERNSHIP · FULLSTACK',es:'PRÁCTICAS · FULLSTACK'},title:{en:'Fullstack Developer',es:'Desarrollador Fullstack'},company:'NAATIK A.I. SOLUTIONS',date:{en:'Feb 2022',es:'Feb 2022'},
+   short:{en:'Built a client-facing website from scratch, led full DBMS design, implemented an email system, and built a CTR prediction model with logistic regression and feature hashing.',es:'Construí sitio web desde cero, lideré diseño DBMS, implementé sistema de email y modelo de predicción CTR con regresión logística y feature hashing.'},
+   points:{en:['Joined a team of five to deliver a client-facing website from scratch — with the dual business goal of retaining existing clients and attracting new ones, under real commercial deadlines.','Developed the full website including multiple views and user-facing features, delivering a polished and functional product within the team\'s delivery timeline.','Led the full design and implementation of the database management system (DBMS) — defining schema, relationships, and query optimization strategies that underpinned the entire platform.','Built and integrated an email communication system enabling structured, trackable outreach between the company and its clients — improving response rates and client relationship management.','Built a CTR prediction model using logistic regression with a feature-hashing pipeline to handle sparse user–ad–context signals efficiently at scale.'],
+           es:['Me uní a un equipo de cinco para entregar un sitio web orientado al cliente desde cero — con el objetivo dual de retener clientes existentes y atraer nuevos, bajo plazos comerciales reales.','Desarrollé el sitio web completo incluyendo múltiples vistas y funcionalidades para el usuario, entregando un producto pulido y funcional dentro del plazo del equipo.','Lideré el diseño e implementación completo del DBMS — definiendo esquema, relaciones y estrategias de optimización de consultas que sustentaron toda la plataforma.','Construí e integré un sistema de comunicación por correo electrónico para outreach estructurado y rastreable entre la empresa y sus clientes — mejorando tasas de respuesta y gestión de relaciones.','Construí un modelo de predicción CTR con regresión logística y pipeline de feature-hashing para manejar señales dispersas usuario-anuncio-contexto de manera eficiente a escala.']},
+   techs:['Python','Logistic Regression','CTR Prediction','DBMS','SQL','Feature Hashing','Email Integration']},
+  {tag:{en:'INTERNSHIP · MOBILE',es:'PRÁCTICAS · MÓVIL'},title:{en:'Mobile Developer',es:'Desarrollador Móvil'},company:'BORBOLETA',date:{en:'Aug 2022',es:'Ago 2022'},
+   short:{en:'Built a cross-platform mobile app for entrepreneurs providing psychological assistance and mentorship, with a consent-gated Firebase chat for iOS and Android.',es:'Desarrollé una app móvil multiplataforma para emprendedores con asistencia psicológica y chat Firebase por consentimiento mutuo para iOS y Android.'},
+   points:{en:['Identified a real gap in mental health and mentorship support for early-stage entrepreneurs — and built a mobile product from the ground up to address it, within a team of five.','Developed the full mobile app for entrepreneurs delivering tailored psychological assistance and mentorship, covering both iOS and Android platforms.','Integrated a Firebase-powered real-time chat between user and psychologist that only activates upon mutual consent — ensuring ethical data handling and user trust by design.','Designed and implemented multiple frontend views for both iOS and Android, delivering a consistent and polished cross-platform user experience from a single codebase approach.','Built the full DBMS schema, CRUD operations, and search filters to support dynamic user profiles, session management, and psychologist matching.','Advocated for stakeholder interests during regular team meetings — translating business and user needs into actionable technical specifications for the development team.'],
+           es:['Identificamos una brecha real en apoyo de salud mental y mentoría para emprendedores en etapas tempranas — y construimos un producto móvil desde cero para atenderla, en un equipo de cinco.','Desarrollé la app móvil completa para emprendedores que brinda asistencia psicológica personalizada y mentoría, cubriendo plataformas iOS y Android.','Integré un chat en tiempo real con Firebase entre usuario y psicólogo que solo se activa con consentimiento mutuo — garantizando manejo ético de datos y confianza del usuario por diseño.','Diseñé e implementé múltiples vistas de frontend para iOS y Android, entregando una experiencia de usuario consistente y pulida en ambas plataformas.','Construí el esquema completo de DBMS, operaciones CRUD y filtros de búsqueda para gestión dinámica de perfiles, sesiones y matching con psicólogos.','Representé los intereses de los stakeholders en reuniones regulares — traduciendo necesidades de negocio y usuario en especificaciones técnicas accionables para el equipo de desarrollo.']},
+   techs:['Swift','Firebase','iOS','Android','DBMS','CRUD','Real-time Chat']},
+  {tag:{en:'RESTAURANT · OWNER',es:'RESTAURANTE · DUEÑO'},title:{en:'Calle 14',es:'Calle 14'},company:'CALLE 14 · @calle14pue',date:{en:'Sep 2022',es:'Sep 2022'},
+   short:{en:'Founded and operate a restaurant in Puebla, developing leadership, communication, and problem-solving skills.',es:'Fundé y opero un restaurante en Puebla, desarrollando liderazgo y resolución de problemas.'},
+   points:{en:['Founded and manage Calle 14 in Puebla, México.','Developed strong leadership and communication skills.','Applied problem-solving in fast-paced environments.','Managed operations, staff, and customer experience.'],
+           es:['Fundé y administro Calle 14 en Puebla, México.','Desarrollé liderazgo y comunicación sólidos.','Apliqué resolución de problemas en entornos de alta presión.','Gestioné operaciones, personal y experiencia del cliente.']},
+   techs:['Leadership','Operations','Business','Team Management']},
+  {tag:{en:'INTERNSHIP · FULLSTACK',es:'PRÁCTICAS · FULLSTACK'},title:{en:'Fullstack Developer',es:'Desarrollador Fullstack'},company:'CODE4U',date:{en:'Jan 2023',es:'Ene 2023'},
+   short:{en:'Architected a full education platform with an online Python compiler, classrooms, quizzes and assignments — serving as SCRUM master for a team of five.',es:'Arquitecté una plataforma educativa completa con compilador Python en línea, aulas, quizzes y tareas — SCRUM master de equipo de cinco.'},
+   points:{en:['Tasked with building a full online coding education platform from zero — with no existing codebase, infrastructure, or design system — to serve real students under tight academic deadlines.','Architected and built the full platform featuring an online Python compiler with test cases, classroom management, quizzes, and assignment workflows — delivering a production-ready product for real student use.','Designed and implemented multiple REST APIs to handle assignment content validation, quiz grading, answer checking, and compiler submission pipelines — ensuring secure, robust, and scalable evaluation flows.','Integrated a live Python compiler with security sandboxing measures to prevent code injection and resource abuse, protecting both the platform and its users.','Served as SCRUM master for a team of five — creating and managing sprints, maintaining direct stakeholder communication, and co-designing both the UI and the full DBMS architecture.'],
+           es:['El reto era construir una plataforma de educación en programación desde cero — sin codebase, infraestructura ni sistema de diseño existente — para servir a estudiantes reales bajo plazos académicos ajustados.','Diseñé y construí la plataforma completa con compilador Python en línea con casos de prueba, gestión de aulas, quizzes y flujos de tareas — entregando un producto en producción para uso estudiantil real.','Diseñé e implementé múltiples APIs REST para validación de contenido de tareas, calificación de quizzes, revisión de respuestas y pipelines de envío al compilador — garantizando flujos de evaluación seguros, robustos y escalables.','Integré un compilador Python en vivo con medidas de sandboxing para prevenir inyección de código y abuso de recursos, protegiendo tanto la plataforma como sus usuarios.','Fungí como SCRUM master de un equipo de cinco — creando y gestionando sprints, manteniendo comunicación directa con stakeholders y co-diseñando la UI y la arquitectura completa del DBMS.']},
+   techs:['Python','JavaScript','REST APIs','SCRUM','DBMS','SQL','Security Sandboxing']},
+  {tag:{en:'INTERNSHIP',es:'PRÁCTICAS'},title:{en:'Production Optimization',es:'Optimización de Producción'},company:'TERNIUM',date:{en:'Feb 2024',es:'Feb 2024'},
+   short:{en:'Built a full ML pipeline to evaluate top-selling product performance at component level — delivering insights that saved 1M+ USD in production optimization.',es:'Construí un pipeline ML completo para evaluar rendimiento de productos top a nivel de componentes — generando insights que ahorraron +1M USD en optimización de producción.'},
+   points:{en:['Faced the challenge of identifying which top-selling products had hidden inefficiencies at the component level — with no existing analytical framework and direct financial stakes exceeding 1M USD.','Built a full end-to-end data analysis project from scratch, evaluating top-selling product performance based on component-level data and delivering actionable production optimization insights that saved 1M+ USD for stakeholders.','Implemented and benchmarked a wide ML arsenal — LSTM, SVM, Decision Tree, Random Forest, Seasonal Decomposition, and K-Means — selecting the best-performing model based on forecast accuracy and business interpretability.','Conducted rigorous data cleaning and validation pipelines to ensure accuracy and reliability of all model inputs and downstream results.','Designed and deployed a Streamlit web application for interactive data visualization, empowering the operations team to explore insights and take action without needing technical expertise.'],
+           es:['El reto era identificar qué productos top tenían ineficiencias ocultas a nivel de componentes — sin framework analítico existente y con implicaciones financieras directas que superaban 1M USD.','Construí un proyecto de análisis de datos de extremo a extremo desde cero, evaluando el rendimiento de productos top basado en datos de componentes y entregando insights que ahorraron +1M USD en optimización de producción.','Implementé y comparé un amplio arsenal de ML — LSTM, SVM, Árbol de Decisión, Random Forest, Descomposición Estacional y K-Means — seleccionando el mejor modelo según precisión de pronóstico e interpretabilidad de negocio.','Realicé pipelines rigurosos de limpieza y validación de datos para garantizar exactitud y confiabilidad de todos los insumos y resultados de los modelos.','Diseñé y desplegué una aplicación Streamlit para visualización interactiva, permitiendo al equipo de operaciones explorar insights y tomar acción sin necesitar experiencia técnica.']},
+   techs:['Python','LSTM','SVM','Random Forest','Streamlit','K-Means','Seasonal Decomposition']},
+  {tag:{en:'HACKATHON · 1ST PLACE',es:'HACKATHON · 1ER LUGAR'},title:{en:'ETH Cinco de Mayo',es:'ETH Cinco de Mayo'},company:'HACKATHON',date:{en:'Feb 2024',es:'Feb 2024'},
+   short:{en:'1st place. Blockchain platform for secure medical data analysis + diagnostic classifier with SHAP explainability.',es:'1er lugar. Plataforma blockchain para análisis médico + clasificador diagnóstico con SHAP.'},
+   points:{en:['Blockchain platform for secure collaborative medical data analysis.','Diagnostic classifier on Wisconsin dataset with feature scaling.','Compared logistic regression, SVM, gradient boosting — high ROC-AUC.','Used SHAP for morphological feature importance.','First place at ETH Cinco de Mayo hackathon.'],
+           es:['Plataforma blockchain para análisis médico colaborativo seguro.','Clasificador diagnóstico en dataset Wisconsin con escalado de características.','Comparé regresión logística, SVM y gradient boosting — alto ROC-AUC.','Usé SHAP para importancia de características morfológicas.','Primer lugar en hackathon ETH Cinco de Mayo.']},
+   techs:['Blockchain','Web3','Python','Logistic Regression','SVM','Gradient Boosting','SHAP','ROC-AUC']},
+  {tag:{en:'INTERNSHIP',es:'PRÁCTICAS'},title:{en:'Academic Adaptability Research',es:'Investigación Adaptabilidad Académica'},company:'IFE',date:{en:'Aug 2024',es:'Ago 2024'},
+   short:{en:'Statistical research on 1,500+ students to test whether high school origin predicted adaptability to the Tec21 university model — using clustering, neural networks, and hypothesis testing.',es:'Investigación estadística sobre +1,500 estudiantes para determinar si el origen de bachillerato predice adaptabilidad al modelo Tec21 — con clustering, redes neuronales y pruebas de hipótesis.'},
+   points:{en:['Tasked with determining whether high school origin (Tec vs. external) predicted a student\'s ability to adapt to the Tec21 university model — a question with direct implications for admissions and academic support policy.','Analyzed data from 1,500+ students — performing end-to-end data cleaning and segmentation by high school origin to ensure unbiased, apples-to-apples group comparisons.','Formulated and tested a statistical hypothesis using grade evolution across semesters 1–5 as the target variable — a novel longitudinal proxy for long-term academic integration.','Implemented K-Means clustering to group students by course choices, elective patterns, and competency levels — uncovering behavioral archetypes that explained differential adaptation rates across segments.','Applied silhouette score and elbow method for statistical validation, ensuring robust and reproducible cluster segmentation.','Trained neural networks with Grid Search hyperparameter optimization to predict student adaptability with high accuracy.','Compared academic performance between both groups to validate the hypothesis — ultimately accepting the null hypothesis, showing that with controlled analysis, both groups converged in long-term academic performance.'],
+           es:['El objetivo era determinar si el origen de bachillerato (Tec vs. externas) predecía la adaptabilidad al modelo Tec21 — con implicaciones directas para admisiones y políticas de apoyo académico.','Analicé datos de +1,500 estudiantes — realizando limpieza y segmentación de extremo a extremo por origen de preparatoria para garantizar comparaciones de grupo sin sesgo.','Formulé y probé una hipótesis estadística usando la evolución de calificaciones del semestre 1 al 5 como variable objetivo — un proxy longitudinal novedoso para la integración académica a largo plazo.','Implementé K-Means para agrupar estudiantes por elección de cursos, materias optativas y niveles de competencia — descubriendo arquetipos conductuales que explicaban tasas diferenciales de adaptación entre segmentos.','Apliqué silhouette score y método del codo para validación estadística, garantizando una segmentación robusta y reproducible.','Entrené redes neuronales con Grid Search para optimizar hiperparámetros y predecir la adaptabilidad con alta precisión.','Comparé el rendimiento académico entre ambos grupos — aceptando la hipótesis nula: con análisis controlado, ambos grupos convergen en rendimiento académico a largo plazo.']},
+   techs:['Python','Neural Networks','K-Means','Grid Search','Scikit-learn','Statistics','Hypothesis Testing']},
+  {tag:{en:'DATA SCIENTIST',es:'CIENT. DE DATOS'},title:{en:'BI & Predictive Analytics',es:'BI y Analítica Predictiva'},company:'DMX',date:{en:'Feb 2025',es:'Feb 2025'},
+   short:{en:'Consolidated 5+ fragmented databases into 4 executive dashboards, built churn prediction models, and led a full Looker Studio → Power BI migration.',es:'Consolidé +5 bases de datos fragmentadas en 4 dashboards ejecutivos, construí modelos de churn y lideré migración completa Looker Studio → Power BI.'},
+   points:{en:['Inherited a fragmented data landscape of 5+ disconnected databases with no unified reporting layer — and an executive team flying blind on commercial performance.','Consolidated and maintained 5+ databases, engineering the data backbone that now feeds 4 critical commercial management dashboards used daily at the executive level.','Designed and deployed predictive analytics models — logistic regression and K-Means clustering — to identify churn patterns early and power data-driven retention strategies that measurably reduced customer attrition.','Developed transition matrices and calculated Jensen-Shannon divergence to monitor and forecast customer behavior dynamics, giving leadership a forward-looking indicator of segment shifts before they impacted revenue.','Spearheaded the full migration from Looker Studio to Power BI — redesigning report architecture, optimizing query performance, and training stakeholders — significantly improving dashboard scalability and adoption across the org.','Delivered advanced statistical analyses that directly shaped commercial strategy and influenced executive-level decision-making on a recurring basis.'],
+           es:['Recibí un entorno de datos fragmentado con más de 5 bases de datos desconectadas y sin capa de reporteo unificada — el equipo ejecutivo operaba sin visibilidad real sobre el desempeño comercial.','Consolidé y mantuve +5 bases de datos, construyendo la columna vertebral de datos que ahora alimenta 4 dashboards críticos de gestión comercial usados diariamente a nivel ejecutivo.','Diseñé y desplegué modelos de analítica predictiva — regresión logística y K-Means — para identificar patrones de churn de forma temprana y potenciar estrategias de retención que redujeron la deserción de clientes de forma medible.','Desarrollé matrices de transición y calculé la divergencia Jensen-Shannon para monitorear y pronosticar la dinámica del comportamiento del cliente, dando al liderazgo un indicador adelantado de cambios de segmento antes de que impactaran los ingresos.','Lideré la migración completa de Looker Studio a Power BI — rediseñando la arquitectura de reportes, optimizando consultas y capacitando stakeholders — mejorando significativamente la escalabilidad y adopción de dashboards en toda la organización.','Entregué análisis estadísticos avanzados que moldearon directamente la estrategia comercial e influyeron en la toma de decisiones ejecutivas de forma recurrente.']},
+   techs:['Python','Power BI','Logistic Regression','K-Means','SQL','BigQuery','Jensen-Shannon']},
+  {tag:{en:'PERSONAL PROJECT',es:'PROYECTO PERSONAL'},title:{en:'Defense AI',es:'Defense AI'},company:'OPEN SOURCE',date:{en:'Jun 2025',es:'Jun 2025'},
+   short:{en:'Bilingual LLM trained on legal data to defend immigrant rights, with custom OCR pipeline.',es:'LLM bilingüe entrenado en datos legales para defender derechos de inmigrantes con pipeline OCR propio.'},
+   points:{en:['Bilingual LLM trained on legal information to defend immigrant rights.','Custom OCR pipeline for data mining of legal flyers.','Evaluated with ROUGE & BLEU metrics.','Full pipeline: HuggingFace tokenizers, PEFT, LoRA.'],
+           es:['LLM bilingüe entrenado con información legal para defender derechos de inmigrantes.','Pipeline OCR personalizado para minería de volantes legales.','Evaluado con métricas ROUGE y BLEU.','Pipeline completo: tokenizadores HuggingFace, PEFT, LoRA.']},
+   techs:['Python','LLM','LoRA','PEFT','OCR','HuggingFace','NLP']},
+  {tag:{en:'DATA SCIENTIST',es:'CIENT. DE DATOS'},title:{en:'Revenue Growth Management',es:'Gestión de Crecimiento de Ingresos'},company:'GRUPO ALEN',date:{en:'Aug 2025',es:'Ago 2025'},
+   short:{en:'Built ML models to uncover hidden SKU cannibalization and deliver a portfolio strategy that improved shelf efficiency and sales velocity at a national CPG company.',es:'Modelos ML para detectar canibalización oculta entre SKUs y entregar una estrategia de portafolio que mejoró eficiencia en anaquel y velocidad de ventas en empresa CPG nacional.'},
+   points:{en:['Faced the challenge of a national CPG company unable to identify which SKUs were driving true growth vs. internal cannibalization — with no existing analytical framework to evaluate portfolio interactions at scale.','Developed a classification model to analyze market and SKU-level behavior, surfacing actionable patterns that directly informed portfolio and assortment strategy decisions.','Implemented a Hierarchical Linear Model (HLM) to estimate product-level and group-level effects — extracting interpretable beta coefficients that separated genuine growth drivers from category-riding SKUs.','Leveraged HLM residuals to map and quantify SKU cannibalization, identifying previously invisible substitution effects and competitive interactions across the full portfolio.','Designed a scenario-evaluation framework enabling the commercial team to predict cannibalization impact across SKUs and stress-test assortment decisions before execution.','Delivered an optimal portfolio strategy that reduced internal cannibalization, improved shelf efficiency, and increased sales velocity for key products — giving leadership a data-driven foundation for assortment decisions.'],
+           es:['La empresa enfrentaba la incapacidad de identificar qué SKUs impulsaban crecimiento real vs. canibalización interna — sin framework analítico para evaluar interacciones de portafolio a escala.','Desarrollé un modelo de clasificación para analizar el comportamiento de mercado y SKU, identificando patrones accionables que informaron directamente decisiones de portafolio y surtido.','Implementé un Modelo Lineal Jerárquico (HLM) para estimar efectos a nivel producto y grupo, extrayendo coeficientes beta interpretables que separaron motores de crecimiento genuinos de SKUs que solo seguían la tendencia de categoría.','Aproveché los residuales del HLM para mapear y cuantificar la canibalización entre SKUs, identificando efectos de sustitución e interacciones competitivas previamente invisibles en todo el portafolio.','Diseñé un framework de evaluación de escenarios que permite al equipo comercial predecir el impacto de canibalización y probar decisiones de surtido antes de ejecutarlas.','Entregué una estrategia de portafolio óptima que redujo la canibalización interna, mejoró la eficiencia en anaquel y aumentó la velocidad de ventas de productos clave.']},
+   techs:['Python','HLM','OLS','Classification','Scikit-learn','Pandas']},
+
+  {tag:{en:'CERTIFICATION',es:'CERTIFICACIÓN'},title:{en:'Data Science Certificate',es:'Certificado en Ciencia de Datos'},company:'TECNOLÓGICO DE MONTERREY',date:{en:'May 2025',es:'May 2025'},
+   short:{en:'Official Data Science certification from Tecnológico de Monterrey, validating expertise in statistical modeling, ML pipelines, and data-driven decision making.',es:'Certificación oficial en Ciencia de Datos del Tecnológico de Monterrey, validando expertise en modelado estadístico, pipelines ML y toma de decisiones basada en datos.'},
+   points:{en:['Completed official Data Science certification program at Tec de Monterrey.','Validated expertise across statistical modeling, machine learning, and data engineering.','Covers supervised/unsupervised learning, time series, NLP, and deployment pipelines.','Complements B.Sc. Computer Science with a formal data specialization credential.'],
+           es:['Completé el programa oficial de certificación en Ciencia de Datos del Tec de Monterrey.','Expertise validado en modelado estadístico, machine learning e ingeniería de datos.','Cubre aprendizaje supervisado/no supervisado, series de tiempo, NLP y pipelines de despliegue.','Complementa la ingeniería en CS con una credencial formal de especialización en datos.']},
+   techs:['Python','ML Pipelines','Statistics','NLP','Time Series','Data Engineering']},
+
+  {tag:{en:'MASTER\'S DEGREE',es:'MAESTRÍA'},title:{en:'M.Sc. Applied Artificial Intelligence',es:'Maestría en IA Aplicada'},company:'TECNOLÓGICO DE MONTERREY',date:{en:'Sep 2025',es:'Sep 2025'},
+   short:{en:'Master\'s in Applied Artificial Intelligence at Tecnológico de Monterrey — advancing expertise in deep learning, LLMs, and AI systems engineering.',es:'Maestría en Inteligencia Artificial Aplicada en el Tec de Monterrey — profundizando en deep learning, LLMs e ingeniería de sistemas de IA.'},
+   points:{en:['Enrolled in the Master\'s in Applied Artificial Intelligence at Tecnológico de Monterrey.','Focus areas: deep learning architectures, LLM fine-tuning, AI systems at scale, and applied research.','Combines rigorous theory with industry-facing capstone projects.','Target graduation: 2027.'],
+           es:['Inscrito en la Maestría en Inteligencia Artificial Aplicada del Tec de Monterrey.','Áreas de enfoque: arquitecturas de deep learning, fine-tuning de LLMs, sistemas de IA a escala e investigación aplicada.','Combina teoría rigurosa con proyectos capstone orientados a la industria.','Graduación objetivo: 2027.']},
+   techs:['Deep Learning','LLMs','AI Systems','Research','PyTorch','Transformers']},
+
+  {tag:{en:'RESEARCH PROGRAM',es:'PROGRAMA DE INVESTIGACIÓN'},title:{en:'GCI World Program',es:'Programa GCI World'},company:'MATSUO LAB · UNIVERSIDAD DE TOKIO',date:{en:'Apr 2026',es:'Abr 2026'},
+   short:{en:'Selected for the GCI World program at Prof. Yutaka Matsuo\'s lab — University of Tokyo, one of the world\'s top AI research groups.',es:'Seleccionado para el programa GCI World en el lab del Prof. Yutaka Matsuo — Universidad de Tokio, uno de los grupos de investigación en IA más destacados del mundo.'},
+   points:{en:['Selected for the Global Center for Innovation (GCI) World program at the University of Tokyo.','Research under Prof. Yutaka Matsuo\'s lab — pioneers of deep learning and foundation model research in Japan.','Collaborated with an international cohort on cutting-edge AI projects.','Deepened expertise in foundation models, reinforcement learning, and AI alignment.'],
+           es:['Seleccionado para el programa GCI World en la Universidad de Tokio.','Investigación bajo el lab del Prof. Yutaka Matsuo — pioneros de deep learning y modelos fundacionales en Japón.','Colaboré con una cohorte internacional en proyectos de IA de vanguardia.','Profundicé en modelos fundacionales, aprendizaje por refuerzo y alineación de IA.']},
+   techs:['Foundation Models','Reinforcement Learning','AI Alignment','Research','Deep Learning']},
+];
+
+// CAROUSEL — active dot fixed at anchor, whole track slides
+const ANCHOR = { x: 38, y: 52 }; // vw/vh of active dot on screen
+const STEP   = { x: 9, y: 10 };  // vw/vh per step along diagonal
+
+function dotPos(i) {
+  const offset = i - activeIdx;
+  return {
+    left: (ANCHOR.x + offset * STEP.x) + 'vw',
+    top:  (ANCHOR.y - offset * STEP.y) + 'vh'
+  };
+}
+
+function buildCal(){
+  const layer = document.getElementById('dotsLayer');
+  // Remove old dots
+  document.querySelectorAll('.p3-entry').forEach(e=>e.remove());
+  ENTRIES.forEach((e,i)=>{
+    const el=document.createElement('div');
+    el.className='p3-entry';
+    el.dataset.dist=Math.abs(i-activeIdx);
+    el.dataset.idx=i;
+    const pos=dotPos(i);
+    el.style.left=pos.left;
+    el.style.top=pos.top;
+    el.style.pointerEvents='auto';
+    el.innerHTML=`<div class="p3-dot"></div><div class="p3-lbl">${e.date[lang]}</div>`;
+    el.addEventListener('click',()=>selectEntry(i));
+    layer.appendChild(el);
+  });
+  document.getElementById('pips').innerHTML=ENTRIES.map((_,i)=>
+    `<div class="cal-pip${i===activeIdx?' active':''}" onclick="selectEntry(${i})"></div>`
+  ).join('');
+  updatePanel();
+}
+
+function selectEntry(i){
+  activeIdx=i;
+  document.querySelectorAll('.p3-entry').forEach(el=>{
+    const j=parseInt(el.dataset.idx);
+    el.dataset.dist=Math.abs(j-i);
+    const pos=dotPos(j);
+    el.style.left=pos.left;
+    el.style.top=pos.top;
+  });
+  document.querySelectorAll('.cal-pip').forEach((p,j)=>p.classList.toggle('active',j===i));
+  updatePanel();
+}
+
+function updatePanel(){
+  const e=ENTRIES[activeIdx];
+  const parts=e.date[lang].split(' ');
+  document.getElementById('heroYr').textContent=parts[1]||e.date[lang];
+  document.getElementById('heroMo').textContent=parts[0]||'';
+  document.getElementById('pTag').textContent=e.tag[lang];
+  document.getElementById('pTitle').textContent=e.title[lang];
+  document.getElementById('pCompany').textContent=e.company;
+  document.getElementById('pDesc').textContent=e.short[lang];
+  document.getElementById('pTechs').innerHTML=e.techs.map(t=>`<span class="p-tech">${t}</span>`).join('');
+}
+
+function navigate(d){selectEntry((activeIdx+d+ENTRIES.length)%ENTRIES.length);}
+
+function openModal(){
+  const e=ENTRIES[activeIdx];
+  document.getElementById('mTag').textContent=e.tag[lang];
+  document.getElementById('mTitle').textContent=e.title[lang];
+  document.getElementById('mCompany').textContent=e.company+' · '+e.date[lang];
+  document.getElementById('mPoints').innerHTML=e.points[lang].map(p=>`<li>${p}</li>`).join('');
+  document.getElementById('mTechs').innerHTML=e.techs.map(t=>`<span class="p-tech">${t}</span>`).join('');
+  document.getElementById('mOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){document.getElementById('mOverlay').classList.remove('open');document.body.style.overflow='';}
+function closeOut(e){if(e.target===document.getElementById('mOverlay'))closeModal();}
+
+// PANEL SWITCHER
+function showPanel(id){
+  document.querySelectorAll('.side-panel').forEach(p=>p.classList.remove('open'));
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active-link'));
+  document.body.classList.toggle('panel-open', !!id);
+  if(id){
+    document.getElementById('panel'+id.charAt(0).toUpperCase()+id.slice(1)).classList.add('open');
+    document.querySelector(`.nav-links a[onclick="showPanel('${id}')"]`).classList.add('active-link');
+  } else {
+    document.querySelector('.nav-links a[onclick="showPanel(null)"]').classList.add('active-link');
+  }
+}
+
+buildCal();
+
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('mOverlay').classList.contains('open')){
+    if(e.key==='Escape')closeModal();
+    return;
+  }
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')navigate(-1);
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')navigate(1);
+});
+
+// Touch/swipe support
+let touchStartX=0,touchStartY=0;
+document.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;touchStartY=e.touches[0].clientY;},{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-touchStartX;
+  const dy=e.changedTouches[0].clientY-touchStartY;
+  if(Math.abs(dx)>40||Math.abs(dy)>40){
+    if(Math.abs(dx)>Math.abs(dy)){dx<0?navigate(1):navigate(-1);}
+    else{dy<0?navigate(1):navigate(-1);}
+  }
+},{passive:true});
+</script>
+</body>
+</html>
